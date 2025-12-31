@@ -1,6 +1,6 @@
 
 
-<img width="1730" height="647" alt="Ekran görüntüsü 2025-12-31 113155" src="https://github.com/user-attachments/assets/837b63e7-e2fe-46f8-9949-e0e5a40dbc57" />
+<img width="1918" height="850" alt="Ekran görüntüsü 2025-12-31 113131" src="https://github.com/user-attachments/assets/a934beb8-21d9-438a-bda8-56ed12d48611" />
 
 
 
