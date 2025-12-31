@@ -1,0 +1,154 @@
+@model OrderModel
+
+@{
+    ViewData["Title"] = "Sipariş Tamamlama";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+
+        <!-- SOL TARAF -->
+        <div class="col-md-6">
+            <form asp-action="CheckOut" method="post" class="row g-3">
+                
+                <!-- Genel Hata Mesajları -->
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <!-- Müşteri Bilgileri -->
+                <div class="col-md-12">
+                    <div class="p-3 border rounded shadow-sm bg-white">
+                        <h4 class="mb-3">Müşteri Bilgileri</h4>
+
+                        <div class="mb-3">
+                            <label class="form-label">Ad Soyad</label>
+                            <input asp-for="CustomerName" class="form-control" />
+                            <span asp-validation-for="CustomerName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Telefon</label>
+                                <input asp-for="CustomerPhone" class="form-control" placeholder="05xx xxx xx xx" />
+                                <span asp-validation-for="CustomerPhone" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Şehir</label>
+                                <input asp-for="CustomerCity" class="form-control" />
+                                <span asp-validation-for="CustomerCity" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-0">
+                            <label class="form-label">Adres</label>
+                            <textarea asp-for="CustomerAdressLine" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="CustomerAdressLine" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ödeme Bilgileri -->
+                <div class="col-md-12">
+                    <div class="p-3 border rounded shadow-sm bg-white">
+                        <h4 class="mb-3">Ödeme Bilgileri</h4>
+
+                        <div class="mb-3">
+                            <label class="form-label">Kart Sahibinin Adı</label>
+                            <input asp-for="CardName" class="form-control" placeholder="Kart üzerindeki isim" />
+                            <span asp-validation-for="CardName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Kart Numarası</label>
+                            <input asp-for="CardNumber" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19" />
+                            <span asp-validation-for="CardNumber" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Ay</label>
+                                <input asp-for="ExpirationMonth" class="form-control" placeholder="MM" maxlength="2" />
+                                <span asp-validation-for="ExpirationMonth" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Yıl</label>
+                                <input asp-for="ExpirationYear" class="form-control" placeholder="YYYY" maxlength="4" />
+                                <span asp-validation-for="ExpirationYear" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">CVV</label>
+                                <input asp-for="Cvc" class="form-control" placeholder="123" maxlength="4" type="password" />
+                                <span asp-validation-for="Cvc" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Butonu -->
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-success btn-lg w-100">
+                        <i class="bi bi-check-circle"></i> Siparişi Tamamla
+                    </button>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- SAĞ TARAF -->
+        <div class="col-md-6 mt-3 mt-md-0">
+            <div class="p-3 border rounded shadow-sm bg-white sticky-top" style="top: 20px;">
+                <h4 class="mb-3">Sipariş Özeti</h4>
+
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Ürün</th>
+                            <th class="text-center">Adet</th>
+                            <th class="text-end">Toplam</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Cart.Items)
+                        {
+                            <tr>
+                                <td>@item.Product.Name</td>
+                                <td class="text-center">@item.Quantity</td>
+                                <td class="text-end">@((item.Quantity * item.Product.Price).ToString("N2")) ₺</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <hr />
+
+                <div class="d-flex justify-content-between fs-5 fw-bold">
+                    <span>Genel Toplam:</span>
+                    <span>@Model.Cart.ComputeTotalValue().ToString("N2") ₺</span>
+                </div>
+
+                <div class="mt-3 p-2 bg-light rounded">
+                    <small class="text-muted">
+                        <i class="bi bi-shield-check"></i> Güvenli ödeme
+                    </small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Validation Scripts (sayfa sonunda) -->
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+<script>
+    // Kart numarası formatlaması (opsiyonel)
+    document.querySelector('input[name="CardNumber"]')?.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\s/g, '');
+        let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+        e.target.value = formattedValue;
+    });
+</script>

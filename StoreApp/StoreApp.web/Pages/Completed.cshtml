@@ -1,0 +1,15 @@
+﻿@page "{orderId?}"
+@model StoreApp.Web.Pages.CompletedModel
+
+@{
+    ViewData["Title"] = "Sipariş Tamamlandı";
+}
+
+<div class="container mt-5">
+    <div class="alert alert-success p-4">
+        <h2 class="mb-3">#@Model.OrderId numaralı siparişiniz alındı ✔</h2>
+        <p class="fs-5">Siparişiniz en kısa sürede gönderilecektir.</p>
+
+        <a href="/" class="btn btn-primary mt-4">Alışverişe Devam Et</a>
+    </div>
+</div>

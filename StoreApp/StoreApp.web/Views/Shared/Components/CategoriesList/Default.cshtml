@@ -1,0 +1,22 @@
+@model IEnumerable<StoreApp.web.Models.CategoryViewModel>
+
+@{
+    var selectedCategory = ViewData["SelectedCategory"] as string;
+}
+
+<div class="d-grid gap-2 mt-2">
+
+    <a href="/products" class="btn @(selectedCategory == null ? "btn-secondary" : "btn-outline-secondary")">
+        Ana Sayfa
+    </a>
+
+    @foreach (var category in Model)
+    {
+        <a class="btn @(selectedCategory == category.Url ? "btn-secondary" : "btn-outline-secondary")"
+           asp-action="Index"
+           asp-controller="Home"
+           asp-route-category="@category.Url">
+            @category.Name
+        </a>
+    }
+</div>
